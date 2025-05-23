@@ -10,7 +10,7 @@ def group_by[K, V](items: Iterable[V], key: Callable[[V], K]) -> dict[K, list[V]
     For example, calling:
         group_by([("A", 1), ("B", 2), ("C", 3), ("A", 4), ("C", 5)], lambda x: x[0])
     produces:
-        {"A": [1,4], "B": [2], "C": [3,5]}
+        {"A": [("A", 1), ("A", 4)], "B": [("B", 2)], "C": [("C", 3), ("C", 5)]}
 
     Parameters
     -----------
