@@ -96,7 +96,9 @@ class SudokuGrid:
     _array: npt.NDArray[np.uint]
 
     def __post_init__(self) -> None:
-        raise NotImplementedError("copy from the previous lab")
+        rows, columns = self._array.shape
+        if self._array.ndim != 2 or rows != columns or not math.sqrt(rows).is_integer():
+            raise ValueError
 
     @property
     def size(self) -> int:
@@ -120,7 +122,7 @@ class SudokuGrid:
         size: int
             the size of a single block, e.g. 3 for a 9x9 grid.
         """
-        raise NotImplementedError("copy from the previous lab")
+        return int(math.sqrt(self._array.shape[0]))
 
     def __getitem__(self, coords):
         """
@@ -190,7 +192,10 @@ class SudokuGrid:
         block_index: int
             index of the block the specified cell belongs to
         """
-        raise NotImplementedError("copy from the previous lab")
+        a = cell_column // self.block_size
+        b = cell_row // self.block_size
+        b *= self.block_size
+        return a+b
 
     def block(self, block_index: int) -> npt.NDArray[np.uint]:
         """
@@ -206,7 +211,13 @@ class SudokuGrid:
         block: npt.NDArray[np.uint]
             a numpy array with values from the specified block
         """
-        raise NotImplementedError("copy from the previous lab")
+        a = block_index
+        block_row = (block_index // self.block_size) * self.block_size
+        block_col = (block_index % self.block_size) * self.block_size
+        return self._array[
+               block_row : block_row + self.block_size,
+               block_col : block_col + self.block_size
+               ]
 
     def copy(self) -> SudokuGrid:
         """
@@ -244,7 +255,31 @@ class SudokuGrid:
         ascii_representation: str
             string containing a pretty ascii representation of the grid
         """
-        raise NotImplementedError("copy from the previous lab")
+        block_size = self.block_size
+        size = self.size
+
+        separator_len = (block_size-1)*3 + 4 + block_size*(2*block_size - 1)
+        separator = '-' * separator_len
+
+        lines = []
+
+        for row in range(size):
+            if row%block_size == 0:
+                lines.append(separator)
+            line = '| '
+            for col in range(size):
+                if col%block_size == 0:
+                    line = line[:-1] #usuwamy przecinek
+                    line += ' | '
+                num = self._array[row, col]
+                line += f"{num},"
+
+            line = line[:-1]
+            line += ' |'
+            lines.append(line)
+        lines.append(separator)
+
+        return '\n'.join(lines)
 
     @staticmethod
     def from_text(lines: list[str]) -> SudokuGrid:
@@ -273,4 +308,23 @@ class SudokuGrid:
         grid: SudokuGrid
             a new sudoku grid
         """
-        raise NotImplementedError("copy from the previous lab")
+        if not lines:
+            raise ValueError()
+
+        size = len(lines[0].split(','))
+
+        if not math.sqrt(size).is_integer():
+            raise ValueError()
+
+        block_size = int(math.sqrt(size))
+        merged = []
+
+        for line in lines:
+            nums = line.split(',')
+            if len(nums) != size:
+                raise ValueError
+            for num in nums:
+                merged.append(int(num))
+
+        grid = np.array(merged, dtype=np.uint).reshape(size, size)
+        return SudokuGrid(grid)
