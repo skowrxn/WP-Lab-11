@@ -55,8 +55,23 @@ class SudokuSolver(ABC):
         """
         return timer() > self._deadline
 
-    # TODO:
-    # Copy the abstract `run_algorithm` method from the previous lab
+    @abstractmethod
+    def run_algorithm(self) -> SudokuGrid | None:
+        """
+        A method implementing the solving algorithm.
+
+        Return:
+        --------
+        solution: SudokuGrid | None:
+            - a sudoku solution if it has been found
+            - `None` if the solution has not been found
+
+        Raises:
+        -------
+        timeout_error: TimeoutError
+            when the available time runs out
+        """
+        pass
 
     @classmethod
     def solve(
@@ -88,4 +103,5 @@ class SudokuSolver(ABC):
         **kwargs: Any
             extra named arguments passed to the solver constructor
         """
-        raise NotImplementedError("copy from the previous lab")
+        solver = cls(puzzle, time_limit, *args, **kwargs)
+        return solver.run_algorithm()
