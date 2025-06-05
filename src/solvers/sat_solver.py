@@ -90,8 +90,8 @@ class SudokuCNF:
         #raise NotImplementedError("not implemented yet")
 
     def _at_most_one(self, propositions: Iterable[Proposition]) -> None:
-        for p, q in itertools.product(propositions):
-            self.cnf.append([-p.val, -q.val])
+        for p, q in itertools.combinations(propositions, 2):
+            self.cnf.append([-p.id, -q.id])
         # TODO:
         # Add to `self.cnf` clauses saying that at most one
         # of the passed propositions has to be true.
@@ -139,6 +139,8 @@ class SudokuCNF:
             self._exactly_one(cell_propositions)
 
     def _every_row_contains_unique_values(self):
+        self._every_cell_has_a_single_value()
+
         # TODO:
         # Modify `self.cnf`, so each sudoku row holds every value **at most once**.
         #
