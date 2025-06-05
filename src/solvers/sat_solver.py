@@ -106,7 +106,7 @@ class SudokuCNF:
         #   ~s or ~q
         #   This way only one proposition can be true. For example, if `p` is true
         #   then ~q and ~s also have to be true.
-        raise NotImplementedError("not implemented yet")
+        #raise NotImplementedError("not implemented yet")
 
     def _exactly_one(self, propositions: Iterable[Proposition]) -> None:
         # TODO:
