@@ -253,7 +253,34 @@ class SudokuCNF:
         # tip 1. we create propositions only for **valid** value assignments:
         #    you may want to look at your code `State.from_grid` in `first_fail_solver.py`
         #    to look how to calculate cells' valid values.
-        raise NotImplementedError("not implemented yet")
+
+        # default_domain = set(range(1, grid.size+1))
+        # free_variables = set()
+        # row_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
+        # col_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
+        # block_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
+        # 
+        # for (row, col), val in grid.enumerate():
+        #     block = grid.block_index(row, col)
+        #     if val != 0:
+        #         row_domains[row].remove(val)
+        #         col_domains[col].remove(val)
+        #         block_domains[block].remove(val)
+        #     else:
+        #         free_variables.add(Variable((row, col, block)))
+        # 
+        # return State(grid, free_variables, row_domains, col_domains, block_domains)
+        
+        size = puzzle.size
+        id_counter = 1
+        result = {}
+        for row, col, value in itertools.product(range(size), range(size), range(1, size+1)):
+            block_index = puzzle.block_index(row, col)
+            coords = Coordinates(row, col, block_index)
+            result[id_counter] = Proposition(coords, value, id_counter)
+            id_counter += 1
+        
+        return result
 
 
 class SatSudokuSolver(SudokuSolver):
