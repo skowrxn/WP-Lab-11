@@ -274,31 +274,30 @@ class SudokuCNF:
         size = puzzle.size
         id_counter = 1
         result = {}
-        default_fill = {row: list(range(1, size+1)) for row in range(size)}
-        row_free_values = default_fill.copy()
-        col_free_values = default_fill.copy()
-        block_free_values = default_fill.copy()
-                
+        default_domain = set(range(1, size + 1))
+        row_taken = {i: set() for i in range(size)}
+        col_taken = {i: set() for i in range(size)}
+        block_taken = {i: set() for i in range(size)}
+        
+        # Track taken values
         for (row, col), val in puzzle.enumerate():
-            block = puzzle.block_index(row, col)
-            if val == 0:
-                continue
-            if val in row_free_values[row]:
-                row_free_values[row].remove(val)
-            if val in col_free_values[col]:
-                col_free_values[col].remove(val)
-            if val in block_free_values[block]:
-                block_free_values[block].remove(val)
-
-        for (row, col), v in puzzle.enumerate():
-            if v != 0:
+            if val != 0:
+                block = puzzle.block_index(row, col)
+                row_taken[row].add(val)
+                col_taken[col].add(val) 
+                block_taken[block].add(val)
+        
+        # Create propositions for empty cells
+        for (row, col), val in puzzle.enumerate():
+            if val != 0:
                 continue
             block = puzzle.block_index(row, col)
-            available = set(row_free_values[row]).intersection(col_free_values[col], block_free_values[block])
-            for val in available:
+            # Valid values are those not already taken in row/col/block
+            valid = default_domain - (row_taken[row] | col_taken[col] | block_taken[block])
+            for val in valid:
                 result[id_counter] = Proposition(Coordinates(row, col, block), val, id_counter)
                 id_counter += 1
-
+        
         return result
 
 
