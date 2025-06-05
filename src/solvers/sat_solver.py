@@ -67,12 +67,13 @@ class SudokuCNF:
     """a puzzle encoded in the CNF"""
 
     def __post_init__(self) -> None:
-        # TODO:
-        # Fill `self.cnf` with correct clauses.
-        # tip. just call `self._every_*` methods :)
-        raise NotImplementedError("not implemented yet"))
+        self._every_cell_has_a_single_value()
+        self._every_row_contains_unique_values() 
+        self._every_col_contains_unique_values()
+        self._every_block_contains_unique_values()
 
     def _at_least_one(self, propositions: Iterable[Proposition]) -> None:
+        self.cnf.append([p.id for p in propositions])
         # TODO:
         # Add to `self.cnf` a clause saying that at least one
         # of the passed propositions has to be true.
@@ -84,9 +85,14 @@ class SudokuCNF:
         #   https://pysathq.github.io/docs/html/api/formula.html#pysat.formula.CNF
         # tip 3. given propositions `p`, `q`,` s` you just want to add a clause:
         #   `p or q or s`
-        raise NotImplementedError("not implemented yet")
+        #a b c d
+        #1 2 3 4
+        #raise NotImplementedError("not implemented yet")
 
     def _at_most_one(self, propositions: Iterable[Proposition]) -> None:
+        self.cnf.append([-1*p.val for p in propositions])
+        for p, q in itertools.product(propositions):
+            self.cnf.append([-p.val, -q.val])
         # TODO:
         # Add to `self.cnf` clauses saying that at most one
         # of the passed propositions has to be true.
@@ -253,6 +259,9 @@ class SatSudokuSolver(SudokuSolver):
         super().__init__(puzzle, time_limit)
 
     def run_algorithm(self) -> SudokuGrid | None:
+
+
+
         # TODO:
         # Use python-sat to solve to sudoku!
         #
