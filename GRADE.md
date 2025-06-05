@@ -9,14 +9,14 @@ There still exist some issues that should be addressed before the deadline: **20
 <details><summary>[1p] Sat solver finds correct solution &gt;&gt; not implemented yet</summary></details>
 <details><summary>[1p] Sat solver respects timeout &gt;&gt; sat solver does not raise `TimeoutError` when necessary</summary></details>
 <details><summary>[1p] Sudoku cnf at most one &gt;&gt; not enough values to unpack (expected 2, got 1)</summary></details>
-<details><summary>[1p] Sudoku cnf exactly one &gt;&gt; not implemented yet</summary></details>
+<details><summary>[1p] Sudoku cnf exactly one &gt;&gt; not enough values to unpack (expected 2, got 1)</summary></details>
 <details><summary>[1p] Sudoku cnf every row contains unique values &gt;&gt; not implemented yet</summary></details>
 <details><summary>[1p] Sudoku cnf every col contains unique values &gt;&gt; not implemented yet</summary></details>
 <details><summary>[1p] Sudoku cnf every block contains unique values &gt;&gt; not implemented yet</summary></details>
 <details><summary>[1p] Sudoku cnf possible propositions &gt;&gt; not implemented yet</summary></details>
-<details><summary>[1p] Sudoku cnf decode &gt;&gt; not implemented yet</summary></details>
+<details><summary>[1p] Sudoku cnf decode &gt;&gt; not enough values to unpack (expected 2, got 1)</summary></details>
 
 -----------
 I remain your faithful servant\
 _Bobot_\
-_June 05, AD 2025, 13:31:47 (UTC)_
+_June 05, AD 2025, 13:38:35 (UTC)_
