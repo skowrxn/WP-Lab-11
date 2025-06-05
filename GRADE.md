@@ -10,10 +10,10 @@ There still exist some issues that should be addressed before the deadline: **20
 <details><summary>[1p] Sat solver respects timeout &gt;&gt; sat solver does not raise `TimeoutError` when necessary</summary></details>
 <details><summary>[1p] Sudoku cnf every col contains unique values &gt;&gt; not implemented yet</summary></details>
 <details><summary>[1p] Sudoku cnf every block contains unique values &gt;&gt; not implemented yet</summary></details>
-<details><summary>[1p] Sudoku cnf possible propositions &gt;&gt; `_possible_propositions` produced an unnecessary/incorrect proposition with value 2 at coordinates Coordinates(row=2, col=3, block=3)</summary>&emsp;-&nbsp;puzzle:&nbsp;<br>-------------<br>|&nbsp;0,0&nbsp;|&nbsp;2,1&nbsp;|<br>|&nbsp;0,2&nbsp;|&nbsp;0,0&nbsp;|<br>-------------<br>|&nbsp;2,3&nbsp;|&nbsp;0,0&nbsp;|<br>|&nbsp;4,0&nbsp;|&nbsp;0,0&nbsp;|<br>-------------</details>
+<details><summary>[1p] Sudoku cnf possible propositions &gt;&gt; `_possible_propositions` is missing a proposition with value 1 at coordinates Coordinates(row=3, col=1, block=2)</summary>&emsp;-&nbsp;puzzle:&nbsp;<br>-------------<br>|&nbsp;0,0&nbsp;|&nbsp;2,1&nbsp;|<br>|&nbsp;0,2&nbsp;|&nbsp;0,0&nbsp;|<br>-------------<br>|&nbsp;2,3&nbsp;|&nbsp;0,0&nbsp;|<br>|&nbsp;4,0&nbsp;|&nbsp;0,0&nbsp;|<br>-------------</details>
 <details><summary>[1p] Sudoku cnf decode &gt;&gt; not implemented yet</summary></details>
 
 -----------
 I remain your faithful servant\
 _Bobot_\
-_June 05, AD 2025, 15:39:22 (UTC)_
+_June 05, AD 2025, 15:44:05 (UTC)_
