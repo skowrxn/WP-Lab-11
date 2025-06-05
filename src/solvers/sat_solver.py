@@ -90,7 +90,6 @@ class SudokuCNF:
         #raise NotImplementedError("not implemented yet")
 
     def _at_most_one(self, propositions: Iterable[Proposition]) -> None:
-        self.cnf.append([-1*p.val for p in propositions])
         for p, q in itertools.product(propositions):
             self.cnf.append([-p.val, -q.val])
         # TODO:
@@ -109,12 +108,17 @@ class SudokuCNF:
         #raise NotImplementedError("not implemented yet")
 
     def _exactly_one(self, propositions: Iterable[Proposition]) -> None:
+        #p or q, but not p and q
+        #  (-p or q) or (p or -q)
+        self._at_most_one(propositions)
+        self._at_least_one(propositions)
+
         # TODO:
         # Add to `self.cnf` clauses saying that exactly one of the passed
         # proposition is true.
         #
         # tip. you can use other already implemented methods :)
-        raise NotImplementedError("not implemented yet")
+        #raise NotImplementedError("not implemented yet")
 
     def _every_cell_has_a_single_value(self):
         # This method is implemented to show the idea, how the encoding works.
