@@ -274,13 +274,6 @@ class SudokuCNF:
         size = puzzle.size
         id_counter = 1
         result = {}
-        for row, col, value in itertools.product(range(size), range(size), range(1, size+1)):
-            block_index = puzzle.block_index(row, col)
-            coords = Coordinates(row, col, block_index)
-            result[id_counter] = Proposition(coords, value, id_counter)
-            id_counter += 1
-
-
         default_fill = {row: list(range(1, size+1)) for row in range(size)}
         row_free_values = default_fill.copy()
         col_free_values = default_fill.copy()
@@ -300,7 +293,7 @@ class SudokuCNF:
         for (row, col), v in puzzle.enumerate():
             if v != 0:
                 continue
-
+            block = puzzle.block_index(row, col)
             available = set(row_free_values[row]).intersection(col_free_values[col], block_free_values[block])
             for val in available:
                 result[id_counter] = Proposition(Coordinates(row, col, block), val, id_counter)
