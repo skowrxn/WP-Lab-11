@@ -290,9 +290,12 @@ class SudokuCNF:
             block = puzzle.block_index(row, col)
             if val == 0:
                 continue
-            row_free_values[row].remove(val)
-            col_free_values[col].remove(val)
-            block_free_values[block].remove(val)
+            if val in row_free_values[row]:
+                row_free_values[row].remove(val)
+            if val in col_free_values[col]:
+                col_free_values[col].remove(val)
+            if val in block_free_values[block]:
+                block_free_values[block].remove(val)
 
         for (row, col), v in puzzle.enumerate():
             if v != 0:
