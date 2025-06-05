@@ -279,7 +279,30 @@ class SudokuCNF:
             coords = Coordinates(row, col, block_index)
             result[id_counter] = Proposition(coords, value, id_counter)
             id_counter += 1
-        
+
+
+        default_fill = {row: list(range(1, size+1)) for row in range(size)}
+        row_free_values = default_fill.copy()
+        col_free_values = default_fill.copy()
+        block_free_values = default_fill.copy()
+                
+        for (row, col), val in puzzle.enumerate():
+            block = puzzle.block_index(row, col)
+            if val == 0:
+                continue
+            row_free_values[row].remove(val)
+            col_free_values[col].remove(val)
+            block_free_values[block].remove(val)
+
+        for (row, col), v in puzzle.enumerate():
+            if v != 0:
+                continue
+
+            available = set(row_free_values[row]).intersection(col_free_values[col], block_free_values[block])
+            for val in available:
+                result[id_counter] = Proposition(Coordinates(row, col, block), val, id_counter)
+                id_counter += 1
+
         return result
 
 
