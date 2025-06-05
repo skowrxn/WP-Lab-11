@@ -139,8 +139,6 @@ class SudokuCNF:
             self._exactly_one(cell_propositions)
 
     def _every_row_contains_unique_values(self):
-        self._every_cell_has_a_single_value()
-
         # TODO:
         # Modify `self.cnf`, so each sudoku row holds every value **at most once**.
         #
@@ -152,7 +150,15 @@ class SudokuCNF:
         #       `cell at coords R,2 has value V`
         #       ...
         #   And **at most one** of them can be true.
-        raise NotImplementedError("not implemented yet")
+
+        for row_val_props in group_by(
+                self.propositions.values(),
+                lambda p: (p.coords.row, p.val)
+        ).values():
+            # Each value can appear at most once in each row
+            self._at_most_one(row_val_props)
+
+        #raise NotImplementedError("not implemented yet")
 
     def _every_col_contains_unique_values(self):
         # TODO:
