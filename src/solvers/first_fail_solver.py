@@ -97,8 +97,22 @@ class State:
         state: State
             a state matching the grid
         """
-        raise NotImplementedError("copy from the previous lab")
+        default_domain = set(range(1, grid.size+1))
+        free_variables = set()
+        row_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
+        col_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
+        block_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
 
+        for (row, col), val in grid.enumerate():
+            block = grid.block_index(row, col)
+            if val != 0:
+                row_domains[row].remove(val)
+                col_domains[col].remove(val)
+                block_domains[block].remove(val)
+            else:
+                free_variables.add(Variable((row, col, block)))
+
+        return State(grid, free_variables, row_domains, col_domains, block_domains)
 
 class FirstFailSudokuSolver(SudokuSolver):
     """
