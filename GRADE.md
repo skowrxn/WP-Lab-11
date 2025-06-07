@@ -8,9 +8,9 @@ There still exist some issues that should be addressed before the deadline: **20
 <details><summary>[1p] Group by works correctly &gt;&gt; not implemented yet</summary></details>
 <details><summary>[1p] Sat solver finds correct solution &gt;&gt; not implemented yet</summary></details>
 <details><summary>[1p] Sat solver respects timeout &gt;&gt; sat solver does not raise `TimeoutError` when necessary</summary></details>
-<details><summary>[1p] Sudoku cnf decode &gt;&gt; not implemented yet</summary></details>
+<details><summary>[1p] Sudoku cnf decode &gt;&gt; only integers, slices (`:`), ellipsis (`...`), numpy.newaxis (`None`) and integer or boolean arrays are valid indices</summary></details>
 
 -----------
 I remain your faithful servant\
 _Bobot_\
-_June 07, AD 2025, 15:33:23 (UTC)_
+_June 07, AD 2025, 15:39:44 (UTC)_
