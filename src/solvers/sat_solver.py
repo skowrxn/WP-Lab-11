@@ -200,14 +200,21 @@ class SatSudokuSolver(SudokuSolver):
 
         def interrupt(s):
             s.interrupt()
+            raise TimeoutError
 
         with Solver(bootstrap_with=sudoku_cnf.cnf) as solver:
             timer = Timer(self._time_limit, interrupt, [solver])
             timer.start()
-            solved = solver.solve_limited(expect_interrupt=True) #czy tu nie przekazujemy czegos?
-            timer.cancel()
-            if solved:
-                return SudokuCNF.decode(solver.get_model())
+            try:
+                solved = solver.solve_limited(expect_interrupt=True)
+                timer.cancel()
+                if solved is None:
+                    raise TimeoutError
+                if solved:
+                    return sudoku_cnf.decode(solver.get_model())
+                return None
+            except TimeoutError:
+                raise TimeoutError
 
         # Given a sudoku `grid: SudokuGrid` one should use static method `encode`
         #     to create a CNF representation:
