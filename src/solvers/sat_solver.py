@@ -152,15 +152,6 @@ class SudokuCNF:
 
         return solved_puzzle
 
-        # TODO:
-        # Implement the method according to the docstring.
-        # 1. remember to copy `self.puzzle`
-        # 2. for every **true** proposition in the results
-        #    assign a corresponding value at the corresponding coordinates
-        #    in the puzzle copy
-        # 3. return the filled grid
-        #raise NotImplementedError("not implemented yet")
-
     @staticmethod
     def _possible_propositions(puzzle: SudokuGrid) -> dict[int, Proposition]:
         size = puzzle.size
@@ -205,8 +196,32 @@ class SatSudokuSolver(SudokuSolver):
         super().__init__(puzzle, time_limit)
 
     def run_algorithm(self) -> SudokuGrid | None:
+        sudoku_cnf = SudokuCNF.encode(self._puzzle)
 
+        def interrupt(s):
+            s.interrupt()
 
+        with Solver(bootstrap_with=sudoku_cnf.cnf) as solver:
+            timer = Timer(self._time_limit, interrupt, [solver])
+            timer.start()
+            solved = solver.solve_limited(expect_interrupt=True) #czy tu nie przekazujemy czegos?
+            timer.cancel()
+            if solved:
+                return SudokuCNF.decode(solver.get_model())
+
+        # Given a sudoku `grid: SudokuGrid` one should use static method `encode`
+        #     to create a CNF representation:
+        #
+        #     `sudoku_cnf = SudokuCNF.encode(grid)`
+        #
+        # To pass the representation into a SAT solver, one should use the `cnf` property:
+        #
+        # `with Solver(bootstrap_with=sudoku_cnf.cnf) as solver`
+        #
+        # Given a solution from a SAT solver (e.g. `solution = solver.get_model()`)
+        # one can translate it to a SudokuGrid via the `decode` method:
+        #
+        # `solution_grid =  sudoku_cnf.decode()`
 
         # TODO:
         # Use python-sat to solve to sudoku!
@@ -236,4 +251,4 @@ class SatSudokuSolver(SudokuSolver):
         #   - `True` means the solver found a solution
         #      * we should return "decoded" solution.
         #        Use `decode` method of the SudokuCNF object.
-        raise NotImplementedError("not implemented yet")
+        #raise NotImplementedError("not implemented yet")
