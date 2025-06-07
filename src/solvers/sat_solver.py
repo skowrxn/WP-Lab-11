@@ -74,51 +74,14 @@ class SudokuCNF:
 
     def _at_least_one(self, propositions: Iterable[Proposition]) -> None:
         self.cnf.append([p.id for p in propositions])
-        # TODO:
-        # Add to `self.cnf` a clause saying that at least one
-        # of the passed propositions has to be true.
-        #
-        # tip 1. clause is represented as a list, e.g.,
-        #   `[1, 3, 5]` means `1 or 3 or 5`, where `1`, `3`, `5`
-        #   are identifiers of the propositions
-        # tip 2. `self.cnf` has an append method:
-        #   https://pysathq.github.io/docs/html/api/formula.html#pysat.formula.CNF
-        # tip 3. given propositions `p`, `q`,` s` you just want to add a clause:
-        #   `p or q or s`
-        #a b c d
-        #1 2 3 4
-        #raise NotImplementedError("not implemented yet")
 
     def _at_most_one(self, propositions: Iterable[Proposition]) -> None:
         for p, q in itertools.combinations(propositions, 2):
             self.cnf.append([-p.id, -q.id])
-        # TODO:
-        # Add to `self.cnf` clauses saying that at most one
-        # of the passed propositions has to be true.
-        #
-        # tip 1. read tips from `_at_least_one`
-        # tip 2. if `1` is identifier of proposition `p`, then
-        #   `-1` represents `~p` (not `p`).
-        # tip 3. given propositions `p`, `q`,` s` you want to add following clauses
-        #   ~p or ~q
-        #   ~p or ~s
-        #   ~s or ~q
-        #   This way only one proposition can be true. For example, if `p` is true
-        #   then ~q and ~s also have to be true.
-        #raise NotImplementedError("not implemented yet")
 
     def _exactly_one(self, propositions: Iterable[Proposition]) -> None:
-        #p or q, but not p and q
-        #  (-p or q) or (p or -q)
         self._at_most_one(propositions)
         self._at_least_one(propositions)
-
-        # TODO:
-        # Add to `self.cnf` clauses saying that exactly one of the passed
-        # proposition is true.
-        #
-        # tip. you can use other already implemented methods :)
-        #raise NotImplementedError("not implemented yet")
 
     def _every_cell_has_a_single_value(self):
         # This method is implemented to show the idea, how the encoding works.
@@ -139,42 +102,21 @@ class SudokuCNF:
             self._exactly_one(cell_propositions)
 
     def _every_row_contains_unique_values(self):
-        # TODO:
-        # Modify `self.cnf`, so each sudoku row holds every value **at most once**.
-        #
-        # tip 1. read comment in `_every_cell_has_a_single_value`
-        # tip 2. group propostion by `row` and `val`
-        #   We want to have propositions for each row R and value V:
-        #       `cell at coord R,0 has value V`
-        #       `cell at coords R,1, has value V`
-        #       `cell at coords R,2 has value V`
-        #       ...
-        #   And **at most one** of them can be true.
-
-        for row_val_props in group_by(
+        for row_val_proposition in group_by(
                 self.propositions.values(),
-                lambda p: (p.coords.row, p.val)
+                lambda p: p.coords.row
         ).values():
-            # Each value can appear at most once in each row
-            self._at_most_one(row_val_props)
-
-        #raise NotImplementedError("not implemented yet")
+            self._at_most_one(row_val_proposition)
 
     def _every_col_contains_unique_values(self):
-        # TODO:
-        # Modify `self.cnf`, so each sudoku column holds every value **at most once**.
-        #
-        # tip 1. read comment in `_every_cell_has_a_single_value`
-        #        just replace rows with columns
-        raise NotImplementedError("not implemented yet")
+        for col_val_proposition in group_by(self.propositions.values(),
+                                            lambda p: p.coords.col):
+            self._at_most_one(col_val_proposition)
 
     def _every_block_contains_unique_values(self):
-        # TODO:
-        # Modify `self.cnf`, so each sudoku column holds every value **at most once**.
-        #
-        # tip 1. read comment in `_every_cell_has_a_single_value`
-        #        just replace rows with blocks
-        raise NotImplementedError("not implemented yet")
+        for block_val_proposition in group_by(self.propositions.values(),
+                                              lambda p: self.puzzle.block_index(p.coords.row, p.coords.col)).values():
+            self._at_most_one(block_val_proposition)
 
     @staticmethod
     def encode(puzzle: SudokuGrid) -> SudokuCNF:
@@ -223,54 +165,6 @@ class SudokuCNF:
 
     @staticmethod
     def _possible_propositions(puzzle: SudokuGrid) -> dict[int, Proposition]:
-        # TODO:
-        # This method should return all the valid propositions
-        # in the sudoku puzzle.
-        #
-        # Every proposition is of type Proposition
-        # and has a given semantics:
-        #   cell at coordinates {coords} has value {value}.
-        #
-        # The propositions are to be returned as a dictionary:
-        # ```
-        # {
-        #   id_1 : proposition_with_id_1,
-        #   id_2 : proposition_with_id_2,
-        #   ...
-        # }
-        # ```
-        #
-        # The proposition identifier are supposed to be consecutive integer numbers: 1, 2, 3, ...
-        # For example, a result could look like:
-        #
-        # ```
-        # {
-        #   1: Proposition(coords=Coordinates(0,0,0), val=0, id=1),
-        #   2: Proposition(coords=Coordinates(0,0,0), val=1, id=2)
-        # }
-        # ```
-        #
-        # tip 1. we create propositions only for **valid** value assignments:
-        #    you may want to look at your code `State.from_grid` in `first_fail_solver.py`
-        #    to look how to calculate cells' valid values.
-
-        # default_domain = set(range(1, grid.size+1))
-        # free_variables = set()
-        # row_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
-        # col_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
-        # block_domains = [Domain(default_domain.copy()) for _ in range(grid.size)]
-        # 
-        # for (row, col), val in grid.enumerate():
-        #     block = grid.block_index(row, col)
-        #     if val != 0:
-        #         row_domains[row].remove(val)
-        #         col_domains[col].remove(val)
-        #         block_domains[block].remove(val)
-        #     else:
-        #         free_variables.add(Variable((row, col, block)))
-        # 
-        # return State(grid, free_variables, row_domains, col_domains, block_domains)
-        
         size = puzzle.size
         id_counter = 1
         result = {}
@@ -279,7 +173,6 @@ class SudokuCNF:
         col_taken = {i: set() for i in range(size)}
         block_taken = {i: set() for i in range(size)}
         
-        # Track taken values
         for (row, col), val in puzzle.enumerate():
             if val != 0:
                 block = puzzle.block_index(row, col)
@@ -287,12 +180,10 @@ class SudokuCNF:
                 col_taken[col].add(val) 
                 block_taken[block].add(val)
         
-        # Create propositions for empty cells
         for (row, col), val in puzzle.enumerate():
             if val != 0:
                 continue
             block = puzzle.block_index(row, col)
-            # Valid values are those not already taken in row/col/block
             valid = default_domain - (row_taken[row] | col_taken[col] | block_taken[block])
             for val in valid:
                 result[id_counter] = Proposition(Coordinates(row, col, block), val, id_counter)
