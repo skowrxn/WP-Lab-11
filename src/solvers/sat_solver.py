@@ -148,7 +148,7 @@ class SudokuCNF:
         solved_puzzle = self.puzzle.copy()
 
         for valid_proposition in valid_propositions:
-            solved_puzzle[valid_proposition.coords] = valid_proposition.val
+            solved_puzzle.__setitem__(valid_proposition.coords, valid_proposition.val)
 
         return solved_puzzle
 
