@@ -104,18 +104,18 @@ class SudokuCNF:
     def _every_row_contains_unique_values(self):
         for row_val_proposition in group_by(
                 self.propositions.values(),
-                lambda p: p.coords.row
+                lambda p: (p.coords.row, p.val)
         ).values():
             self._at_most_one(row_val_proposition)
 
     def _every_col_contains_unique_values(self):
         for col_val_proposition in group_by(self.propositions.values(),
-                                            lambda p: p.coords.col):
+                                            lambda p: (p.coords.col, p.val)).values():
             self._at_most_one(col_val_proposition)
 
     def _every_block_contains_unique_values(self):
         for block_val_proposition in group_by(self.propositions.values(),
-                                              lambda p: self.puzzle.block_index(p.coords.row, p.coords.col)).values():
+                                              lambda p: (self.puzzle.block_index(p.coords.row, p.coords.col), p.val)).values():
             self._at_most_one(block_val_proposition)
 
     @staticmethod
