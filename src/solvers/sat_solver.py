@@ -84,18 +84,6 @@ class SudokuCNF:
         self._at_least_one(propositions)
 
     def _every_cell_has_a_single_value(self):
-        # This method is implemented to show the idea, how the encoding works.
-        # It modifies the `self.cnf`, so each sudoku cell holds exactly one value.
-        #
-        # First, it uses `group_by` method from `src.utils.group_by` (already imported)
-        #   to group `self.propositions` into propositions for each cell.
-        #   In other words, `cell_propositions` hold propositions:
-        #       `cell at coords C has value 1`
-        #       `cell at coords C has value 2`
-        #       `cell at coords C has value 3`
-        #       ...
-        # Then it uses `self._exactly_one` to modify the CNF.
-        # Now every empty cell has to have a single assigned value.
         for cell_propositions in group_by(
             self.propositions.values(), lambda p: p.coords
         ).values():
@@ -154,6 +142,16 @@ class SudokuCNF:
         solution: SudokuGrid
             a sudoku grid filled according the SAT results
         """
+
+        valid_ids = [prop_id for prop_id in results if prop_id >= 0]
+        valid_propositions = [self.propositions[valid_prop_id] for valid_prop_id in valid_ids]
+        solved_puzzle = self.puzzle.copy()
+
+        for valid_proposition in valid_propositions:
+            solved_puzzle[valid_proposition.coords] = valid_proposition.val
+
+        return solved_puzzle
+
         # TODO:
         # Implement the method according to the docstring.
         # 1. remember to copy `self.puzzle`
@@ -161,7 +159,7 @@ class SudokuCNF:
         #    assign a corresponding value at the corresponding coordinates
         #    in the puzzle copy
         # 3. return the filled grid
-        raise NotImplementedError("not implemented yet")
+        #raise NotImplementedError("not implemented yet")
 
     @staticmethod
     def _possible_propositions(puzzle: SudokuGrid) -> dict[int, Proposition]:
